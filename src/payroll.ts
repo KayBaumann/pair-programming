@@ -29,6 +29,8 @@ export function calculatePayslip(salary: Salary): Payslip {
 
   const age = payday.getFullYear() - born.getFullYear();
 
+  const yearlyGross = salary.gross * 12;
+
 
   //If you have to pay AHV, IV and EO
   //If you are under 17, you don't have to pay AHV, IV and EO
@@ -39,9 +41,21 @@ export function calculatePayslip(salary: Salary): Payslip {
       });
   }
 
-  
+  //If you have to pay ALV, NBU
+  if (yearlyGross >= 2500) {
+      ["ALV", "BU"].forEach((key) => {
+      const rate = DEDUCTION_RATES.get(key);
+      deductions.set(key, (salary.gross * rate));
+      });
+  }
 
-  
+  //If you have to pay PK
+  if (yearlyGross >= 22680) {
+      ["PK"].forEach((key) => {
+      const rate = DEDUCTION_RATES.get(key);
+      deductions.set(key, (salary.gross * rate));
+      });
+  }
 
 
 
