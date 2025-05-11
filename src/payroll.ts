@@ -24,6 +24,27 @@ export type Payslip = {
 
 export function calculatePayslip(salary: Salary): Payslip {
   // TODO: implement
+  const deductions: Deductions = new Map();
+  const { payday, born } = salary;
+
+  const age = payday.getFullYear() - born.getFullYear();
+
+
+  //If you have to pay AHV, IV and EO
+  //If you are under 17, you don't have to pay AHV, IV and EO
+  if (age >= 17) {
+      ["AHV", "IV", "EO"].forEach((key) => {
+      const rate = DEDUCTION_RATES.get(key);
+      deductions.set(key, (salary.gross * rate));
+      });
+  }
+
+  
+
+  
+
+
+
   const result: Payslip = {
     salary: salary,
     deductions: new Map(),
