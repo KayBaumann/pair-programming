@@ -43,7 +43,7 @@ export function calculatePayslip(salary: Salary): Payslip {
 
   //If you have to pay ALV, NBU
   if (yearlyGross >= 2500) {
-      ["ALV", "BU"].forEach((key) => {
+      ["ALV", "NBU"].forEach((key) => {
       const rate = DEDUCTION_RATES.get(key);
       deductions.set(key, (salary.gross * rate));
       });
@@ -57,13 +57,19 @@ export function calculatePayslip(salary: Salary): Payslip {
       });
   }
 
+  let totaldeductions = 0;
+  deductions.forEach((rate) => {
+    totaldeductions += rate;
+  });
 
+  let net = 1;
+  net = salary.gross - totaldeductions;
 
   const result: Payslip = {
     salary: salary,
-    deductions: new Map(),
-    totalDeductions: 0.0,
-    net: salary.gross,
+    deductions,
+    totalDeductions: totaldeductions,
+    net: net,
   };
   return result;
 }
